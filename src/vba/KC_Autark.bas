@@ -52,6 +52,8 @@ Public Sub KC_Initialize()
     Set ws = EnsureSheet("_KC_Txn", True)
     ws.Range("A1:F1").Value = Array("Queue-ID", "Blatt", "Zelle", "Formel/Wert", "Neuer Wert", "War Formel")
     ws.Columns("B:D").NumberFormat = "@"
+    ws.Range("G1") = "Rahmen-Snapshot"
+    ws.Range("H:AE").NumberFormat = "General"
     Set ws = EnsureSheet("KitaFino_Warteschlange", False)
     If ws.Cells(1, 1).Value = "" Then
         ws.Range("A1").Value = "KitaFino prüfen und verbuchen"

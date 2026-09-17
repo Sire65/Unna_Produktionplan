@@ -65,13 +65,17 @@ Public Sub KC_ProjectDay(ByVal manual As Boolean)
         Set cell = KC_Sheet(CStr(item(0))).Range(item(1))
         txn.Cells(i, 1) = 0: txn.Cells(i, 2) = item(0): txn.Cells(i, 3) = item(1)
         txn.Cells(i, 4).Value2 = cell.Value2: txn.Cells(i, 5) = item(2): txn.Cells(i, 6) = VarType(cell.Value2)
+        KC_SnapshotBorders txn, i, cell
         i = i + 1
     Next item
-    snapshots = txn.Range("A2:F" & i - 1).Value2: started = True
+    snapshots = txn.Range("A2:AE" & i - 1).Value2: started = True
     ThisWorkbook.Save
     For Each item In plan
         KC_Sheet(CStr(item(0))).Range(item(1)).Value2 = item(2)
         If CDbl(KC_Sheet(CStr(item(0))).Range(item(1)).Value2) <> CDbl(item(2)) Then Err.Raise vbObjectError + 673, , "Sonderkost-Rücklesen stimmt nicht überein"
+    Next item
+    For Each item In plan
+        KC_MarkImported KC_Sheet(CStr(item(0))).Range(item(1))
     Next item
     target.Calculate
     KC_Sheet("Produktionsplan").Range("A17:K68").Calculate
@@ -89,7 +93,7 @@ Failed:
     errorText = Err.Description
     On Error Resume Next
     If started Then
-        txn.Range("A2:F" & plan.Count + 1).Value2 = snapshots
+        txn.Range("A2:AE" & plan.Count + 1).Value2 = snapshots
         KC_RestoreSnapshots
         ThisWorkbook.Save
     End If

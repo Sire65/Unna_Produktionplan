@@ -53,9 +53,10 @@ Public Function KC_BookRow(ByVal r As Long, ByVal automatic As Boolean) As Boole
         txn.Cells(i, 2) = item(0): txn.Cells(i, 3) = item(1)
         txn.Cells(i, 4).Value2 = cell.Value2: txn.Cells(i, 5) = item(2)
         txn.Cells(i, 6) = VarType(cell.Value2)
+        KC_SnapshotBorders txn, i, cell
         i = i + 1
     Next item
-    snapshots = txn.Range("A2:F" & i - 1).Value2
+    snapshots = txn.Range("A2:AE" & i - 1).Value2
     q.Cells(r, 12) = "VERBUCHUNG LÄUFT"
     journalStarted = True
     ThisWorkbook.Save
@@ -68,6 +69,9 @@ Public Function KC_BookRow(ByVal r As Long, ByVal automatic As Boolean) As Boole
         If IsError(cell.Value2) Then Err.Raise vbObjectError + 652, , "Fehler beim Rücklesen"
         If Not IsNumeric(cell.Value2) Then Err.Raise vbObjectError + 653, , "Nichtnumerischer Wert beim Rücklesen"
         If CDbl(cell.Value2) <> CDbl(item(2)) Then Err.Raise vbObjectError + 654, , "Rücklesen stimmt nicht überein"
+    Next item
+    For Each item In plan
+        KC_MarkImported ThisWorkbook.Worksheets(item(0)).Range(item(1))
     Next item
     Set recalcSheets = CreateObject("Scripting.Dictionary")
     For Each item In plan
@@ -97,7 +101,7 @@ Failed:
     errorText = Err.Description
     On Error Resume Next
     If journalStarted Then
-        txn.Range("A2:F" & plan.Count + 1).Value2 = snapshots
+        txn.Range("A2:AE" & plan.Count + 1).Value2 = snapshots
         KC_RestoreSnapshots
         q.Cells(r, 12) = KC_ERROR: q.Cells(r, 14).ClearContents
         q.Cells(r, 13) = "Verbuchung abgebrochen/zurückgesetzt: " & errorText
@@ -172,6 +176,7 @@ Public Sub KC_RestoreSnapshots()
             Case vbBoolean: cell.Value2 = CBool(v)
             Case Else: cell.Value2 = CDbl(v)
         End Select
+        KC_RestoreBorders txn, r, cell
     Next r
     If r > 2 Then txn.Rows("2:" & r - 1).ClearContents
 End Sub
