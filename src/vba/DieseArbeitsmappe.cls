@@ -227,37 +227,8 @@ Private Sub Workbook_Open()
 
 
 
-    ' ---------------------------------------------------------
-
-    ' Pivot-Update ? Label in frmSpruch aktualisieren, falls sichtbar
-
-    ' ---------------------------------------------------------
-
-   ' ---------------------------------------------------------
-
-' Pivot-Update ? Label in frmSpruch aktualisieren, falls sichtbar
-
-' ---------------------------------------------------------
-
-If VBA.UserForms.count > 0 Then
-
-    On Error Resume Next
-
-    frmSpruch.lblPivotAbgleich.Caption = _
-
-        "Pivot-Abgleich erfolgreich durchgeführt – " & Format(Now, "HH:mm") & " Uhr"
-
-    frmSpruch.Repaint
-
-    On Error GoTo FehlerHandler
-
-End If
-
-
-
-
-
-
+    ' Pivot-Status nur an eine bereits geladene, sichtbare Spruch-Form senden.
+    KC_UpdatePivotLabel
 
     ' ---------------------------------------------------------
 
@@ -584,3 +555,19 @@ End Sub
 
 
 
+
+Public Sub KC_UpdatePivotLabel()
+    Dim loadedForm As Object
+    For Each loadedForm In VBA.UserForms
+        If TypeName(loadedForm) = "frmSpruch" Then
+            If loadedForm.Visible Then
+                ' Controls-Zugriff bleibt spät gebunden: fehlendes Label blockiert das Öffnen nicht.
+                On Error Resume Next
+                loadedForm.Controls("lblPivotAbgleich").Caption = "Pivot-Abgleich erfolgreich durchgeführt – " & Format(Now, "HH:mm") & " Uhr"
+                loadedForm.Repaint
+                On Error GoTo 0
+            End If
+            Exit For
+        End If
+    Next loadedForm
+End Sub
