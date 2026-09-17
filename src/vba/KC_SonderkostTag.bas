@@ -14,6 +14,7 @@ End Sub
 
 Public Sub KC_ProjectDay(ByVal manual As Boolean)
     Dim ledger As Worksheet, target As Worksheet, txn As Worksheet, dt As Date, v As Variant
+    Dim weekSheet As Object, weekInfo As Variant
     Dim c As Long, count As Long, conflicts As Long, cell As Range, previousEvents As Boolean
     Dim plan As New Collection, item As Variant, i As Long, snapshots As Variant, started As Boolean
     If mProject Or ThisWorkbook.ReadOnly Then Exit Sub
@@ -24,6 +25,9 @@ Public Sub KC_ProjectDay(ByVal manual As Boolean)
     v = KC_Sheet("Produktionsplan").Range("L4").Value
     If Not IsDate(v) Then Exit Sub
     dt = DateValue(v)
+    Set weekSheet = KC_V20.FindWeekSheetByDate(ThisWorkbook, dt, weekInfo)
+    If weekSheet Is Nothing Then Exit Sub
+    If KC_V20.NumberFromCell(weekSheet.Name) <> DatePart("ww", dt, vbMonday, vbFirstFourDays) Then Exit Sub
     If CLng(dt) < 1000 Or CLng(dt) > ledger.Rows.Count Then Exit Sub
     For c = 1 To 1680
         v = ledger.Cells(CLng(dt), c).Value2

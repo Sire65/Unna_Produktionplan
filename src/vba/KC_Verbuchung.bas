@@ -3,13 +3,15 @@ Option Explicit
 Private mBooking As Boolean
 
 Public Sub KC_AutoBook()
-    Dim q As Worksheet, r As Long
+    Dim q As Worksheet, r As Long, targetReason As String
     If KC_Sheet("_KC_Config").Cells(2, 2).Value <> "EIN" Then Exit Sub
     Set q = KC_Sheet("_KC_Q")
     For r = 2 To q.Cells(q.Rows.Count, 1).End(xlUp).row
         If q.Cells(r, 12).Value = KC_READY Then
-            KC_BookRow r, True
-            Exit For
+            If KC_V20.KC_TargetWeekMatches(ThisWorkbook, CStr(q.Cells(r, 7).Value), targetReason) Then
+                KC_BookRow r, True
+                Exit For
+            End If
         End If
     Next r
 End Sub

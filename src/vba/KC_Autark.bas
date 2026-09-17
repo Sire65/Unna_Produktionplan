@@ -219,6 +219,7 @@ End Sub
 
 Public Sub KC_Refresh()
     Dim ws As Worksheet, q As Worksheet, c As Worksheet, r As Long, v As Long, n As Long
+    Dim targetReason As String
     Set ws = KC_Sheet("KitaFino_Warteschlange"): Set q = KC_Sheet("_KC_Q"): Set c = KC_Sheet("_KC_Config")
     ws.Unprotect
     ws.Range("B3") = c.Cells(2, 2).Value: ws.Range("B4") = c.Cells(3, 2).Value
@@ -227,8 +228,10 @@ Public Sub KC_Refresh()
     ws.Range("B8").Value = KC_Sheet("_KC_Config").Cells(9, 2).Value
     n = ws.Cells(ws.Rows.Count, 1).End(xlUp).row
     If n >= 10 Then ws.Range("A10:K" & n).ClearContents
+    v = 9
     For r = 2 To q.Cells(q.Rows.Count, 1).End(xlUp).row
-        v = r + 8
+        If Not KC_V20.KC_TargetWeekMatches(ThisWorkbook, CStr(q.Cells(r, 7).Value), targetReason) Then GoTo NextVisibleRow
+        v = v + 1
         ws.Cells(v, 1) = q.Cells(r, 1).Value: ws.Cells(v, 2) = q.Cells(r, 2).Value
         ws.Cells(v, 3) = q.Cells(r, 9).Value: ws.Cells(v, 4) = q.Cells(r, 10).Value
         ws.Cells(v, 5) = q.Cells(r, 11).Value: ws.Cells(v, 6) = q.Cells(r, 12).Value
@@ -241,6 +244,7 @@ Public Sub KC_Refresh()
             Case KC_WARN: ws.Cells(v, 6).Interior.Color = RGB(255, 235, 156)
             Case Else: ws.Cells(v, 6).Interior.Color = RGB(255, 199, 206)
         End Select
+NextVisibleRow:
     Next r
     ws.Columns("B").NumberFormat = "dd.mm.yyyy hh:mm"
     ws.Columns("D:E").NumberFormat = "dd.mm.yyyy": ws.Columns("K").NumberFormat = "dd.mm.yyyy hh:mm"
