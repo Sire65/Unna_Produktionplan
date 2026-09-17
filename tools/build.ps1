@@ -27,6 +27,7 @@ try {
  $taskExcel.AutomationSecurity=1
  $taskBook=$taskExcel.Workbooks.Open($taskOut,0,$false)
  $taskExcel.Run("'"+$taskBook.Name+"'!KC_Initialize")
+ $taskExcel.Run("'"+$taskBook.Name+"'!KC_TransportSetup")
  $taskBook.Worksheets('_KC_Config').Range('B2').Value2='AUS'
  $taskExcel.Run("'"+$taskBook.Name+"'!KC_Refresh")
  $taskBook.Save()

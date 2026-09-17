@@ -31,7 +31,7 @@ V20: Strolche R/S/T; Kita2_4 AC. Zusätzlich vom Auftraggeber freigegeben: Clust
 
 ## Entwicklung und Kontrolle
 
-`src/vba` enthält neun neue Standardmodule und die vier gezielt ersetzten bestehenden Komponenten. Alle anderen vorhandenen VBA-Komponenten bleiben fachlich erhalten. `docs/BESTAND.md` und `docs/FUNKTIONSVERTRAEGE.md` dokumentieren Ausgangsstand und Portierung.
+`src/vba` enthält zehn neue Standardmodule und die sechs gezielt ersetzten bestehenden Komponenten. Alle anderen vorhandenen VBA-Komponenten bleiben fachlich erhalten. `docs/BESTAND.md` und `docs/FUNKTIONSVERTRAEGE.md` dokumentieren Ausgangsstand und Portierung.
 
 `tools/build.ps1 -SourcePath <unveränderte MASTER.xlsm> -OutputPath <neue Kopie.xlsm>` baut ausschließlich eine Kopie mittels installierten Windows-Excels. Zugriff auf das VBA-Projekt muss für den **Entwicklungsbau** bereits möglich sein; das Werkzeug ändert keine globalen Sicherheits-/Trust-Center-Einstellungen. Der Küchenbetrieb benötigt diesen Zugriff und dieses Werkzeug nicht.
 
@@ -61,3 +61,12 @@ Ja ergänzt ausschließlich eine vollständig leere, unverbundene Zeile im recht
 Neue Bezeichnungen ohne bekannte Allergie-Schlüsselwörter werden ausschließlich innerhalb ausdrücklich beschrifteter, mengenmäßig begrenzter Sonderkost-Detailblöcke erkannt. Speiseplanzeilen werden nicht als neue Formen geraten. Gruppen- und Tageskontrollsummen müssen stimmen. Unbekannter Kunde, falsche Woche, Mengenfehler oder ungültige Zuordnung werden durch die Freigabe nicht aufgehoben. Nach Ja erfolgt eine vollständige erneute Prüfung und weiterhin die normale Buchungsbestätigung. Neue bestätigte Formen bleiben WARNUNG und werden ausschließlich manuell verbucht; die Automatik zeigt keine Freigabe-Dialoge und legt keine Formen an.
 
 _KC_FormTxn speichert vor Änderungen die ursprünglichen Formeln/Werte der Definition und Summen. Ein Fehler oder Neustart stellt eine unvollständige Freigabe wieder her. Verbuchte neue Mengen nutzen denselben datierten Speicher, Rücklesetest, roten Rahmen und Buchungs-Rollback wie bestehende Sonderkost. Ersatzbestellungen schreiben ausdrückliche Nullen. Bei älteren vollständig importierten Kunden-/Tagesbestellungen, die vor Anlage einer neuen Form liegen, gilt diese Form für den betreffenden Tag als null; fremde Tagesmengen werden nicht übernommen.
+
+
+### Transport und Mengenbewertung drucken
+
+Transportschein druckt ausschließlich den Tourenplan im Blatt Transport (A1:K36, einschließlich Bemerkungsfeld). Mengenbewertung druckt ausschließlich den Bewertungszettel M5:AB32. Beide Dokumente werden als einzelne A4-Seite im Querformat ausgegeben. Die beiden bestehenden Button-Makronamen bleiben erhalten.
+
+Die Auswahl Transport in Druck alles sowie der ältere Sammeldruck verwenden denselben Tourenplan-Druckweg. Es wird nicht die erste Seite einer zufällig zuletzt eingestellten Druckfläche verwendet. Der Druckbereich, Zoom, Seitenanpassung, Ausrichtung und Papierformat werden vor dem einzelnen Auftrag gesichert und danach auch bei Fehlern wiederhergestellt. Eine neu gebaute Entwicklungskopie erhält den Tourenplan als Standard-Druckbereich.
+
+KC_DruckTransport.KC_TransportPrint unterstützt zusätzlich einen ausdrücklichen PDF-Dateipfad für die Prüfung derselben Druckfläche. Native Excel-PDFs, Druckpfadprüfungen und Abnahmeberichte bleiben lokal; sie werden nicht auf GitHub veröffentlicht.
