@@ -1,4 +1,4 @@
-﻿Attribute VB_Name = "KC_Autark"
+Attribute VB_Name = "KC_Autark"
 Option Explicit
 Public Const KC_READY As String = "GEPRÜFT – BEREIT"
 Public Const KC_WARN As String = "WARNUNG – MANUELL PRÜFEN"
@@ -104,6 +104,7 @@ Public Sub KC_Initialize()
             button.OnAction = "'" & Replace(ThisWorkbook.Name, "'", "''") & "'!" & Mid(button.OnAction, InStrRev(button.OnAction, "!") + 1)
         End If
     Next button
+    KC_FormSetup
     KC_SetupInterval
     KC_Refresh
 End Sub

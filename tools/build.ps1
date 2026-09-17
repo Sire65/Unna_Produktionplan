@@ -1,4 +1,4 @@
-﻿param([string]$OutputPath='work/KC_Produktionsplan_dev.xlsm',[string]$SourcePath='work/source/KC_KUECHE_KOMPLETT_16-09-2026/MASTER_KW38_FUNKTIONIERT_16-09-2026.xlsm')
+param([string]$OutputPath='work/KC_Produktionsplan_dev.xlsm',[string]$SourcePath='work/source/KC_KUECHE_KOMPLETT_16-09-2026/MASTER_KW38_FUNKTIONIERT_16-09-2026.xlsm')
 $ErrorActionPreference='Stop'
 if ([IO.Path]::IsPathRooted($SourcePath)) { $taskSource=[IO.Path]::GetFullPath($SourcePath) } else { $taskSource=[IO.Path]::GetFullPath((Join-Path (Get-Location) $SourcePath)) }
 if ([IO.Path]::IsPathRooted($OutputPath)) { $taskOut=[IO.Path]::GetFullPath($OutputPath) } else { $taskOut=[IO.Path]::GetFullPath((Join-Path (Get-Location) $OutputPath)) }
@@ -27,6 +27,8 @@ try {
  $taskExcel.AutomationSecurity=1
  $taskBook=$taskExcel.Workbooks.Open($taskOut,0,$false)
  $taskExcel.Run("'"+$taskBook.Name+"'!KC_Initialize")
+ $taskBook.Worksheets('_KC_Config').Range('B2').Value2='AUS'
+ $taskExcel.Run("'"+$taskBook.Name+"'!KC_Refresh")
  $taskBook.Save()
  Write-Output ('BUILT '+$taskOut)
  Write-Output ('Components='+$taskBook.VBProject.VBComponents.Count)

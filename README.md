@@ -1,11 +1,11 @@
-﻿# Küchenversion – KitaFino in VBA
+# Küchenversion – KitaFino in VBA
 
 Entwicklung zu Issue #1 auf `codex/autarke-kuechenversion`. Ausgangspunkt ist ausschließlich die bereitgestellte funktionierende MASTER. Sie bleibt unverändert.
 
 ## Bedienung
 
 1. `KC_Produktionsplan.xlsm` als Entwicklungskopie öffnen und Makros für diese Datei zulassen. Windows-Excel und klassisches Outlook mit eingerichtetem Postfach werden verwendet.
-2. Der bisherige KitaFino-Importbutton und die KitaFino-Navigation öffnen jetzt die Warteschlange. Auf `KitaFino_Warteschlange` stehen Auto **AUS**, Outlook-Überwachung **EIN**, Postfach **Mensa**. Postfachname bei Bedarf in B5 ändern. Die erste Prüfung erfolgt nach etwa fünf Sekunden, danach alle 60 Sekunden; Excel muss dafür bereit sein.
+2. Der bisherige KitaFino-Importbutton und die KitaFino-Navigation öffnen jetzt die Warteschlange. Auf `KitaFino_Warteschlange` stehen Auto **AUS**, Outlook-Überwachung **EIN**, Postfach **Mensa**. Postfachname bei Bedarf in Stammdaten!Q33 ändern; Abfrageintervall in Q34 einstellen. Die erste Prüfung erfolgt nach etwa fünf Sekunden, danach alle 60 Sekunden; Excel muss dafür bereit sein.
 3. `Jetzt prüfen` liest neue KitaFino-Bestellungen in die interne Queue. Alternativ `Outlook-Auswahl einlesen` oder `MSG-Dateien einlesen`.
 4. Eine Queue-Zeile auswählen, `Mail und Zielwerte anzeigen` zur Kontrolle nutzen. `Markierte Bestellung verbuchen` fragt vor dem tatsächlichen Ersetzen vorhandener Werte nach.
 5. Fehler und nicht eindeutige Sonderkost sind auch manuell gesperrt. Warnungen wegen vorhandener abweichender Werte oder einer neueren Bestellung verlangen manuelle Kontrolle. Auto lässt ausschließlich vollständig bereite Datensätze zu.
@@ -27,11 +27,11 @@ Die datierte Matrix nutzt den Excel-Datumswert als Zeilennummer und `60*(Matrix-
 
 ## Freigegebene Kombinationen
 
-V20: Strolche R/S/T; Kita2_4 AC. Zusätzlich vom Auftraggeber freigegeben: Cluster1–4 R (Laktose+Nüsse), S (Laktose+Fructose), T (Nüsse+Soja+Südfrüchte), AD (Gluten+Lactose+Fructose). Jedes Kombinationsergebnis zählt genau ein Essen. Unbekannte/zusätzliche Merkmale bleiben gesperrt. Nicht freigegebene Kombinationen werden vollständig gesperrt; Einschränkungen dürfen bei der Zuordnung nicht verloren gehen.
+V20: Strolche R/S/T; Kita2_4 AC. Zusätzlich vom Auftraggeber freigegeben: Cluster1–4 R (Laktose+Nüsse), S (Laktose+Fructose), T (Nüsse+Soja+Südfrüchte), AD (Gluten+Lactose+Fructose). Jedes Kombinationsergebnis zählt genau ein Essen. Unbekannte/zusätzliche Merkmale verlangen eine ausdrückliche manuelle Matrix-Freigabe; Einschränkungen dürfen bei der Zuordnung nicht verloren gehen.
 
 ## Entwicklung und Kontrolle
 
-`src/vba` enthält sechs neue Standardmodule und die vier gezielt ersetzten bestehenden Komponenten. Alle anderen vorhandenen VBA-Komponenten bleiben fachlich erhalten. `docs/BESTAND.md` und `docs/FUNKTIONSVERTRAEGE.md` dokumentieren Ausgangsstand und Portierung.
+`src/vba` enthält neun neue Standardmodule und die vier gezielt ersetzten bestehenden Komponenten. Alle anderen vorhandenen VBA-Komponenten bleiben fachlich erhalten. `docs/BESTAND.md` und `docs/FUNKTIONSVERTRAEGE.md` dokumentieren Ausgangsstand und Portierung.
 
 `tools/build.ps1 -SourcePath <unveränderte MASTER.xlsm> -OutputPath <neue Kopie.xlsm>` baut ausschließlich eine Kopie mittels installierten Windows-Excels. Zugriff auf das VBA-Projekt muss für den **Entwicklungsbau** bereits möglich sein; das Werkzeug ändert keine globalen Sicherheits-/Trust-Center-Einstellungen. Der Küchenbetrieb benötigt diesen Zugriff und dieses Werkzeug nicht.
 
@@ -50,3 +50,14 @@ Outlook-Abfrageintervall: Stammdaten!Q34, ganze Sekunden von 10 bis 3600; Standa
 Voraussetzungen: Windows mit Desktop-Excel und zugelassenen Makros, klassisches Outlook mit konfiguriertem Postfach. Standard-Postfachname ist Mensa; angepasst wird er in Stammdaten!Q33. Der Zugriff verwendet ausschließlich den Posteingang des eindeutig gefundenen Outlook-Stores. Fehlender oder mehrfach vorkommender Name sperrt den Zugriff, ohne ein anderes Postfach auszuwählen. Bestehende ActiveX-/VBA-Komponenten und die auf Wunsch erhaltene Mittelwerte-Verknüpfung auf Y: begrenzen die allgemeine Portabilität. Keine Zusage für jedes Gerät, Mac, Web-Excel oder neues Outlook.
 
 Postfachname und Abfrageintervall werden zentral in Stammdaten!Q33 bzw. Q34 gespeichert. B5 in der Warteschlange zeigt nur das zuletzt verwendete Postfach an. Änderungen am Postfach setzen beim nächsten Scan die alte Suche zurück. Ein leerer/fehlerhafter Name sperrt jede Abfrage und fällt niemals auf ein anderes Postfach zurück. Migration von Q23 nach Q34 erhält vorhandene individuelle Intervalle und entfernt die alten Import-Einstellungsbeschriftungen.
+
+
+### Neue Sonderkostformen manuell bestätigen
+
+Bei der manuellen Verbuchung wird für eine eindeutig erkannte, bisher unbekannte Sonderkostform oder Kombination gefragt: „Unbekannte Sonderkostform gefunden. Soll ich sie in die Sonderkostform-Matrix übernehmen?“ Der Dialog zeigt den vollständigen Wortlaut, Kunde, Lieferdatum, Menge und vorgeschlagene freie Zeile; Nein ist vorausgewählt. Nein lässt die betreffende Form und Bestellung unverändert. Bereits einzeln bestätigte Formen bleiben als Stammdaten erhalten, wenn eine später angebotene Form abgelehnt oder die anschließende Buchung abgebrochen wird.
+
+Ja ergänzt ausschließlich eine vollständig leere, unverbundene Zeile im rechten Matrixbereich AK29:AY200. Bestehende Zeilen und die Zuordnungstabelle ab BA werden nicht verschoben. Eine Kombination wird vollständig als eigene Form gespeichert und zählt einmal. Die exakte Zuordnung (nur Groß-/Kleinschreibung und Leerraum normalisiert) wird mit Zeitpunkt/Excel-Benutzer in VeryHidden _KC_Forms gespeichert. Die Kundensummen AE/AF erhalten die zusätzlichen Matrixmengen; die KW-Tagesformeln beziehen AF für den zugehörigen Kunden und den richtigen Tag ein. Vorhandene Summenbasis bleibt erhalten. Nach einer früheren Freigabe manuell veränderte Summen sperren weitere Freigaben.
+
+Neue Bezeichnungen ohne bekannte Allergie-Schlüsselwörter werden ausschließlich innerhalb ausdrücklich beschrifteter, mengenmäßig begrenzter Sonderkost-Detailblöcke erkannt. Speiseplanzeilen werden nicht als neue Formen geraten. Gruppen- und Tageskontrollsummen müssen stimmen. Unbekannter Kunde, falsche Woche, Mengenfehler oder ungültige Zuordnung werden durch die Freigabe nicht aufgehoben. Nach Ja erfolgt eine vollständige erneute Prüfung und weiterhin die normale Buchungsbestätigung. Neue bestätigte Formen bleiben WARNUNG und werden ausschließlich manuell verbucht; die Automatik zeigt keine Freigabe-Dialoge und legt keine Formen an.
+
+_KC_FormTxn speichert vor Änderungen die ursprünglichen Formeln/Werte der Definition und Summen. Ein Fehler oder Neustart stellt eine unvollständige Freigabe wieder her. Verbuchte neue Mengen nutzen denselben datierten Speicher, Rücklesetest, roten Rahmen und Buchungs-Rollback wie bestehende Sonderkost. Ersatzbestellungen schreiben ausdrückliche Nullen. Bei älteren vollständig importierten Kunden-/Tagesbestellungen, die vor Anlage einer neuen Form liegen, gilt diese Form für den betreffenden Tag als null; fremde Tagesmengen werden nicht übernommen.

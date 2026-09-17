@@ -289,6 +289,7 @@ Public Function ClusterQtySum(seg,n)
     For i=0 To UBound(lines)
         line=Trim(CStr(lines(i)))
         norm=Replace(line,vbTab," ")
+
         Do While InStr(norm,"  ")>0:norm=Replace(norm,"  "," "):Loop
         If Not inCluster Then
             If curRe.Test(norm) Or InStr(1,norm,"Cluster " & n & " Anzahl",vbTextCompare)=1 Then inCluster=True
@@ -409,10 +410,10 @@ Public Function LuenernDetails(body)
 End Function
 
 Public Function SonderkostPreview(body)
-    Dim lines,i,line,norm,ctx,re,m,label,qty,key,d,keys,k,out
+    Dim lines,i,line,norm,ctx,re,m,label,qty,key,d,keys,k,out,remaining
     Set d=CreateObject("Scripting.Dictionary")
     lines=Split(Replace(Replace(body,vbCrLf,vbLf),vbCr,vbLf),vbLf)
-    ctx=""
+    ctx="": remaining=0
 
     Set re=CreateObject("VBScript.RegExp")
     re.IgnoreCase=True:re.Global=False
@@ -421,6 +422,14 @@ Public Function SonderkostPreview(body)
     For i=0 To UBound(lines)
         line=Trim(CStr(lines(i)))
         norm=Replace(line,vbTab," ")
+        ' A bounded, explicitly labelled detail block may contain new forms.
+        ' Never infer new restrictions from ordinary menu ingredient lines.
+        If RxTest(norm,"^(?:Cluster\s*[1-4]|Gruppe\s*[1-4]|L[üu]nern|Liedbach|Strolche|Zusammenfassung|BESTELLUNGEN)\b") Then remaining=0
+        If RxTest(norm,"^Davon\s+Ern.hrungsbesonderheiten:\s*\d+\s*$") Then
+            remaining=CLng(Rx1(norm,"^Davon\s+Ern.hrungsbesonderheiten:\s*(\d+)"))
+            GoTo NextPreviewLine
+        End If
+
 
         If RxTest(norm,"^Cluster\s*[1-4]\b") Then
             ctx=Rx1(norm,"^(Cluster\s*[1-4])")
@@ -438,10 +447,15 @@ Public Function SonderkostPreview(body)
 
         ' FIX5ZF: Speiseplan-Zeilen strikt ausschließen.
         ' Nur typische Sonderkost-/Allergieformulierungen dürfen durch.
-        If IsStrictSonderkostLine(norm) And re.Test(norm) Then
+        If (IsStrictSonderkostLine(norm) Or (remaining>0 And ctx<>"")) And re.Test(norm) Then
             Set m=re.Execute(norm)(0)
             label=Trim(CStr(m.SubMatches(0)))
             qty=CLng(m.SubMatches(1))
+            If label="" Then GoTo NextPreviewLine
+            If remaining>0 Then
+                If qty>remaining Then remaining=0: GoTo NextPreviewLine
+                remaining=remaining-qty
+            End If
             If ctx="" Then ctx="?"
             key=ctx & "|" & label
             If d.Exists(key) Then
@@ -450,6 +464,7 @@ Public Function SonderkostPreview(body)
                 d.Add key,qty
             End If
         End If
+NextPreviewLine:
     Next
 
     out=""
@@ -570,4 +585,28 @@ Public Function KC_TargetWeekMatches(wb As Object, ByVal subject As String, ByRe
     Exit Function
 Failed:
     reason = "Zielwoche nicht sicher bestimmbar: " & Err.Description
+End Function
+
+
+Public Function KC_DetailBlocksValid(ByVal body As String) As Boolean
+    Dim lines As Variant, line As Variant, norm As String, remaining As Long, qty As String
+    KC_DetailBlocksValid = False
+    lines = Split(Replace(Replace(body, vbCrLf, vbLf), vbCr, vbLf), vbLf)
+    For Each line In lines
+        norm = CStr(FlatText(line))
+        If RxTest(norm, "^(?:Cluster\s*[1-4]|Gruppe\s*[1-4]|L[üu]nern|Liedbach|Strolche|Zusammenfassung|BESTELLUNGEN|[AB]-)\b") Then
+            If remaining <> 0 Then Exit Function
+        End If
+        If RxTest(norm, "^Davon\s+Ern.hrungsbesonderheiten:\s*\d+\s*$") Then
+            If remaining <> 0 Then Exit Function
+            remaining = CLng(Rx1(norm, "^Davon\s+Ern.hrungsbesonderheiten:\s*(\d+)"))
+        ElseIf remaining > 0 Then
+            qty = Rx1(norm, "^.+?[,;]?\s+(\d{1,3})\s*$")
+            If qty <> "" Then
+                If CLng(qty) > remaining Then Exit Function
+                remaining = remaining - CLng(qty)
+            End If
+        End If
+    Next line
+    KC_DetailBlocksValid = (remaining = 0)
 End Function

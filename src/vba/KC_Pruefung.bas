@@ -11,6 +11,8 @@ Public Function KC_Evaluate(ByVal subject As String, ByVal body As String) As Ob
     e.Add "plan", plan: e.Add "status", KC_READY: e.Add "note", ""
     e.Add "id", "": e.Add "customer", "": e.Add "date", "": e.Add "end", ""
     e.Add "type", "UNBEKANNT": e.Add "special", "": e.Add "forms", 0: e.Add "bookable", True
+    Dim unknown As New Collection
+    e.Add "unknown", unknown
     Set KC_Evaluate = e
     On Error GoTo Failed
     id = KC_V20.Rx1(subject, "\((\d{5})\)")
@@ -31,6 +33,7 @@ Public Function KC_Evaluate(ByVal subject As String, ByVal body As String) As Ob
     If Not KC_V20.KC_TargetWeekMatches(ThisWorkbook, subject, targetReason) Then Block e, "Zielwoche passt nicht: " & targetReason
     If e("status") = KC_ERROR Then Exit Function
     If CDbl(qty) > 100000 Or CDbl(qty) < 0 Then Block e, "Gesamtmenge unplausibel": Exit Function
+    If Not KC_V20.KC_DetailBlocksValid(body) Then Block e, "Sonderkost-Detailblock widerspricht seiner Gruppen-Kontrollsumme oder ist unvollständig": Exit Function
     sk = KC_V20.SonderkostPreview(body)
     e("special") = KC_V20.SonderkostPretty(sk): e("forms") = KC_V20.SonderkostFormCount(sk)
     groups = 1: days = 1
@@ -239,7 +242,7 @@ End Function
 
 Private Sub KC_SpecialPlan(e As Object, ByVal seg As String, ByVal id As String, ByVal dt As Date, kw As Worksheet, ByVal base As Long, labels As Variant)
     Dim sk As String, p As Variant, context As String, raw As String, customer As String, count As Long
-    Dim cats As Collection, off As Long, col As Long, combCol As Long, cr As Long
+    Dim cats As Collection, off As Long, col As Long, combCol As Long, cr As Long, learnedRow As Long, fr As Long, registryRow As Long
     Dim plan As Collection, sums As Object, key As String, keys As Variant, k As Variant, a As Variant
     Dim sourceMeals As Long, plannedMeals As Long, declared As Long, re As Object, matches As Object, m As Object
     Dim gx As Long, i As Long, currentDate As Variant, canMatrix As Boolean, skSeg As String
@@ -277,14 +280,22 @@ Private Sub KC_SpecialPlan(e As Object, ByVal seg As String, ByVal id As String,
             count = CLng(KC_V20.Rx1(CStr(p), "\[(\d+)\]\s*$"))
             customer = ResolveCustomer(id, context)
             If customer = "" Then Warn e, "Sonderkost-Kunde nicht eindeutig: " & p, False: GoTo NextForm
-            If Not KnownLabel(raw) Then Warn e, "Zusätzliche/unbekannte Sonderkost-Merkmale: " & raw, False: GoTo NextForm
+            learnedRow = KC_FormRow(raw)
+            If learnedRow > 0 Then
+                col = MatrixColumn(customer)
+                If col = 0 Then Block e, "Sonderkost-Matrixkunde fehlt": Exit Sub
+                key = "Sonderkostformen|" & KC_Sheet("Sonderkostformen").Cells(learnedRow, col).Address(False, False)
+                Warn e, "Manuell bestätigte neue Sonderkostform (nur manuell verbuchen): " & raw, True
+                GoTo CountForm
+            End If
+            If Not KnownLabel(raw) Then OfferForm e, raw, customer, dt, count: GoTo NextForm
             Set cats = Categories(raw)
-            If cats.Count = 0 Then Warn e, "Sonderkost nicht konvertierbar: " & raw, False: GoTo NextForm
+            If cats.Count = 0 Then OfferForm e, raw, customer, dt, count: GoTo NextForm
             col = KC_V20.HeaderCol(kw, customer)
             If col = 0 Then Block e, "Sonderkost-Zielspalte fehlt": Exit Sub
             If cats.Count > 1 Then
                 combCol = ComboColumn(customer, raw, cats)
-                If combCol = 0 Then Warn e, "Kombinationsfeld nicht freigegeben: " & customer & ": " & raw, False: GoTo NextForm
+                If combCol = 0 Then OfferForm e, raw, customer, dt, count: GoTo NextForm
                 cr = CustomerRow(customer)
                 If cr = 0 Then Block e, "Kombinations-Kundenzeile nicht eindeutig": Exit Sub
                 key = "Sonderkostformen|" & KC_Sheet("Sonderkostformen").Cells(cr, combCol).Address(False, False)
@@ -297,9 +308,10 @@ Private Sub KC_SpecialPlan(e As Object, ByVal seg As String, ByVal id As String,
                     If col = 0 Or cr = 0 Then Block e, "Fisch-Matrixziel fehlt": Exit Sub
                     key = "Sonderkostformen|" & KC_Sheet("Sonderkostformen").Cells(cr, col).Address(False, False)
                 Else
-                    Warn e, "Unbekanntes Sonderkost-Ziel", False: GoTo NextForm
+                    OfferForm e, raw, customer, dt, count: GoTo NextForm
                 End If
             End If
+CountForm:
             If Not sums.Exists(key) Then sums.Add key, 0
             sums(key) = CLng(sums(key)) + count
             plannedMeals = plannedMeals + count
@@ -331,6 +343,16 @@ NextForm:
             End If
         Next gx
     End If
+    ' Explicit per-date zeros also remove a newly learned form from a replacement order.
+    For registryRow = 2 To KC_Sheet("_KC_Forms").Cells(KC_Sheet("_KC_Forms").Rows.Count, 1).End(xlUp).Row
+        fr = KC_FormRow(CStr(KC_Sheet("_KC_Forms").Cells(registryRow, 2).Value2))
+        For gx = 0 To UBound(labels)
+            col = MatrixColumn(CStr(labels(gx)))
+            If col = 0 Then Block e, "Sonderkost-Matrixkunde fehlt": Exit Sub
+            key = "Sonderkostformen|" & KC_Sheet("Sonderkostformen").Cells(fr, col).Address(False, False)
+            If Not sums.Exists(key) Then sums.Add key, 0
+        Next gx
+    Next registryRow
     For Each k In sums.Keys
         a = Split(CStr(k), "|")
         If a(0) = "Sonderkostformen" Then
@@ -367,3 +389,11 @@ Private Function MatrixRow(ByVal feature As String) As Long
 End Function
 
 
+
+Private Sub OfferForm(e As Object, ByVal raw As String, ByVal customer As String, ByVal dt As Date, ByVal count As Long)
+    Dim unknown As Collection
+    If MatrixColumn(customer) = 0 Then Block e, "Sonderkost-Matrixkunde fehlt": Exit Sub
+    Set unknown = e("unknown")
+    unknown.Add Array(raw, customer, dt, count)
+    Warn e, "Unbekannte Sonderkostform/Kombination – manuelle Übernahme erforderlich: " & raw, False
+End Sub

@@ -1,4 +1,4 @@
-﻿Attribute VB_Name = "KC_Verbuchung"
+Attribute VB_Name = "KC_Verbuchung"
 Option Explicit
 Private mBooking As Boolean
 
@@ -30,6 +30,13 @@ Public Function KC_BookRow(ByVal r As Long, ByVal automatic As Boolean) As Boole
     ' Re-evaluate from immutable internal capture, never trust the displayed worksheet.
     Set e = KC_Evaluate(CStr(q.Cells(r, 7).Value), KC_Body(CLng(q.Cells(r, 1).Value)))
     KC_StoreEvaluation r, e: KC_CheckHistory r, e
+    If Not automatic And q.Cells(r, 12).Value <> KC_ERROR Then
+        If e("unknown").Count > 0 Then
+            If Not KC_FormAsk(e) Then Exit Function
+            Set e = KC_Evaluate(CStr(q.Cells(r, 7).Value), KC_Body(CLng(q.Cells(r, 1).Value)))
+            KC_StoreEvaluation r, e: KC_CheckHistory r, e
+        End If
+    End If
     If q.Cells(r, 12).Value = KC_ERROR Or Not e("bookable") Then
         If Not automatic Then MsgBox "Keine Verbuchung: " & q.Cells(r, 13).Value, vbExclamation, "KitaFino"
         Exit Function
@@ -79,6 +86,10 @@ Public Function KC_BookRow(ByVal r As Long, ByVal automatic As Boolean) As Boole
     Next item
     For Each sheetName In recalcSheets.Keys
         If Left(CStr(sheetName), 4) <> "_KC_" Then ThisWorkbook.Worksheets(CStr(sheetName)).UsedRange.Calculate
+    Next sheetName
+    KC_Sheet("Sonderkostformen").Calculate
+    For Each sheetName In recalcSheets.Keys
+        If KC_V20.RxTest(CStr(sheetName), "^KW\s*\d+$") Then ThisWorkbook.Worksheets(CStr(sheetName)).UsedRange.Calculate
     Next sheetName
     KC_Sheet("Produktionsplan").Range("A17:K68").Calculate
     KC_Sheet("Transport").Range("AZ3:BN250").Calculate

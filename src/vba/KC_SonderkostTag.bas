@@ -16,6 +16,7 @@ Public Sub KC_ProjectDay(ByVal manual As Boolean)
     Dim ledger As Worksheet, target As Worksheet, txn As Worksheet, dt As Date, v As Variant
     Dim weekSheet As Object, weekInfo As Variant
     Dim c As Long, count As Long, conflicts As Long, cell As Range, previousEvents As Boolean
+    Dim matrixRow As Long, matrixCol As Long, inferredZero As Boolean
     Dim plan As New Collection, item As Variant, i As Long, snapshots As Variant, started As Boolean
     If mProject Or ThisWorkbook.ReadOnly Then Exit Sub
     On Error GoTo Failed
@@ -29,8 +30,18 @@ Public Sub KC_ProjectDay(ByVal manual As Boolean)
     If weekSheet Is Nothing Then Exit Sub
     If KC_V20.NumberFromCell(weekSheet.Name) <> DatePart("ww", dt, vbMonday, vbFirstFourDays) Then Exit Sub
     If CLng(dt) < 1000 Or CLng(dt) > ledger.Rows.Count Then Exit Sub
-    For c = 1 To 1680
-        v = ledger.Cells(CLng(dt), c).Value2
+    For c = 1 To KC_FormLastRow() * 60
+        v = ledger.Cells(CLng(dt), c).Value2: inferredZero = False
+        matrixRow = (c - 1) \ 60 + 1: matrixCol = (c - 1) Mod 60 + 1
+        ' Earlier imports predate newly learned rows. The dated Fisch slot proves
+        ' that this customer's complete order was already imported for this day.
+        If IsEmpty(v) And matrixRow >= 29 And matrixCol >= 38 And matrixCol <= 50 Then
+            If KC_FormRow(CStr(target.Cells(matrixRow, 37).Value2)) = matrixRow Then
+                If target.Cells(20, 37).Value2 = "Fisch" Then
+                    If Not IsEmpty(ledger.Cells(CLng(dt), 19 * 60 + matrixCol).Value2) Then v = 0: inferredZero = True
+                End If
+            End If
+        End If
         If Not IsEmpty(v) Then
             If Not IsNumeric(v) Then Err.Raise vbObjectError + 670, , "Beschädigter datierter Sonderkostwert"
             Set cell = target.Cells((c - 1) \ 60 + 1, (c - 1) Mod 60 + 1)
@@ -46,6 +57,7 @@ Public Sub KC_ProjectDay(ByVal manual As Boolean)
                 plan.Add Array(ledger.Name, ledger.Cells(2, c).Address(False, False), v)
                 plan.Add Array(ledger.Name, ledger.Cells(3, c).Address(False, False), CLng(dt))
             End If
+            If inferredZero Then plan.Add Array(ledger.Name, ledger.Cells(CLng(dt), c).Address(False, False), 0)
             count = count + 1
         End If
     Next c
@@ -78,6 +90,7 @@ Public Sub KC_ProjectDay(ByVal manual As Boolean)
         KC_MarkImported KC_Sheet(CStr(item(0))).Range(item(1))
     Next item
     target.Calculate
+    weekSheet.UsedRange.Calculate
     KC_Sheet("Produktionsplan").Range("A17:K68").Calculate
     KC_Sheet("_KC_Config").Cells(9, 1) = "Sonderkost-Plantag"
     KC_Sheet("_KC_Config").Cells(9, 2) = "Intern verbuchte Matrix-Sonderkost für " & Format(dt, "dd.mm.yyyy") & " übernommen"
