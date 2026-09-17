@@ -103,6 +103,7 @@ Public Sub KC_Initialize()
             button.OnAction = "'" & Replace(ThisWorkbook.Name, "'", "''") & "'!" & Mid(button.OnAction, InStrRev(button.OnAction, "!") + 1)
         End If
     Next button
+    KC_SetupInterval
     KC_Refresh
 End Sub
 
@@ -297,7 +298,8 @@ Public Sub KC_Tick()
     If Not mRunning Then Exit Sub
     KC_CheckNow
     KC_ProjectDay False
-    Schedule CLng(Application.Min(3600, Application.Max(10, Val(KC_Sheet("_KC_Config").Cells(4, 2).Value))))
+    Schedule KC_IntervalSeconds()
+    KC_Refresh
 End Sub
 
 Private Function OutlookApp() As Object
@@ -310,7 +312,7 @@ End Function
 
 Public Sub KC_CheckNow()
     Dim ol As Object, ns As Object, store As Object, folder As Object, mail As Object, c As Worksheet
-    Dim query As String, utc As Date, count As Long, r As Long, t As Single, storeName As String
+    Dim query As String, utc As Date, count As Long, r As Long, t As Single, storeName As String, storeMatches As Long
     If mBusy Or ThisWorkbook.ReadOnly Then Exit Sub
     mBusy = True
     On Error GoTo Failed
@@ -322,9 +324,12 @@ Public Sub KC_CheckNow()
     Set ol = OutlookApp(): Set ns = ol.GetNamespace("MAPI")
     If mScanItems Is Nothing Then
         For Each store In ns.Stores
-            If StrComp(store.DisplayName, storeName, vbTextCompare) = 0 Then Set folder = store.GetDefaultFolder(6): Exit For
+            If StrComp(store.DisplayName, storeName, vbTextCompare) = 0 Then
+                storeMatches = storeMatches + 1
+                If storeMatches = 1 Then Set folder = store.GetDefaultFolder(6)
+            End If
         Next store
-        If folder Is Nothing Then Err.Raise vbObjectError + 621, , "Outlook-Postfach nicht eindeutig gefunden: " & storeName
+        If storeMatches <> 1 Or folder Is Nothing Then Err.Raise vbObjectError + 621, , "Outlook-Postfach nicht eindeutig gefunden: " & storeName
         utc = folder.PropertyAccessor.LocalTimeToUTC(DateAdd("d", -CLng(Application.Max(1, Val(c.Cells(6, 2).Value))), Now))
         query = "@SQL=""urn:schemas:httpmail:subject"" LIKE '%kitafino%' AND ""urn:schemas:httpmail:datereceived"" >= '" & Format(utc, "yyyy-mm-dd hh:nn") & "'"
         Set mScanItems = folder.Items.Restrict(query)
