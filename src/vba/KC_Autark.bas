@@ -82,6 +82,7 @@ Public Sub KC_Initialize()
         AddButton ws, "kcFile", "MSG-Dateien einlesen", "KC_CaptureFiles", 870, 80
     End If
     ws.Unprotect
+    ws.Range("B5").Locked = True
     ws.Range("A3") = "Auto": ws.Range("A4") = "Outlook"
     ws.Range("A6") = "Prüfung": ws.Range("A8") = "Plantag"
     ws.Rows(1).RowHeight = 26: ws.Rows(2).RowHeight = 18
@@ -317,7 +318,7 @@ Public Sub KC_CheckNow()
     mBusy = True
     On Error GoTo Failed
     Set c = KC_Sheet("_KC_Config")
-    storeName = Trim(CStr(KC_Sheet("KitaFino_Warteschlange").Range("B5").Value))
+    storeName = KC_MailboxName()
     If storeName <> CStr(c.Cells(5, 2).Value) Then
         c.Cells(5, 2) = storeName: Set mScanItems = Nothing
     End If
