@@ -3,6 +3,7 @@ Option Explicit
 
 Public Function KC_Evaluate(ByVal subject As String, ByVal body As String) As Object
     Dim e As Object, plan As Collection, id As String, qty As String, d1 As Variant, d2 As Variant
+    Dim targetReason As String
     Dim ws As Worksheet, info As Variant, groups As Long, days As Long, day As Long, gx As Long
     Dim seg As String, q As Variant, values(3) As Long, daySum As Long, total As Long
     Dim labels As Variant, col As Long, base As Long, sk As String, declared As Long, n As Long
@@ -27,6 +28,7 @@ Public Function KC_Evaluate(ByVal subject As String, ByVal body As String) As Ob
         If Weekday(CDate(d1), vbMonday) > 5 Then Block e, "Lieferdatum liegt am Wochenende"
         If Not ValidSubjectDates(subject) Then Block e, "Kalenderdatum im Betreff ungültig"
     End If
+    If Not KC_V20.KC_TargetWeekMatches(ThisWorkbook, subject, targetReason) Then Block e, "Zielwoche passt nicht: " & targetReason
     If e("status") = KC_ERROR Then Exit Function
     If CDbl(qty) > 100000 Or CDbl(qty) < 0 Then Block e, "Gesamtmenge unplausibel": Exit Function
     sk = KC_V20.SonderkostPreview(body)

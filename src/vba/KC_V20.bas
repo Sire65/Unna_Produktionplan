@@ -544,3 +544,30 @@ Public Function RxTest(s,pat)
 End Function
 
 
+
+' Jede geöffnete Wochenmappe liest nur Bestellungen für ihre eigenen Lieferdaten.
+Public Function KC_TargetWeekMatches(wb As Object, ByVal subject As String, ByRef reason As String) As Boolean
+    Dim firstDate As Variant, lastDate As Variant, ws As Object, info As Variant, mon As Variant
+    On Error GoTo Failed
+    firstDate = GermanDate(subject): lastDate = SecondGermanDate(subject)
+    If Not IsDate(firstDate) Then reason = "Lieferdatum fehlt": Exit Function
+    info = "": Set ws = FindWeekSheetByDate(wb, firstDate, info)
+    If ws Is Nothing Then reason = CStr(info): Exit Function
+    mon = WeekStartFromSheet(ws)
+    If Not IsDate(mon) Then reason = "Wochenstart fehlt": Exit Function
+    If NumberFromCell(ws.Name) <> DatePart("ww", CDate(firstDate), vbMonday, vbFirstFourDays) Then
+        reason = "KW im Blattnamen widerspricht dem Lieferdatum": Exit Function
+    End If
+    If Weekday(CDate(firstDate), vbMonday) > 5 Then reason = "Lieferdatum am Wochenende": Exit Function
+    If IsDate(lastDate) Then
+        If Weekday(CDate(firstDate), vbMonday) <> 1 Or DateDiff("d", firstDate, lastDate) <> 4 Then
+            reason = "Wochenbestellung muss Montag bis Freitag derselben Woche umfassen": Exit Function
+        End If
+        If DateValue(lastDate) > DateAdd("d", 4, CDate(mon)) Then reason = "Enddatum außerhalb der Zielwoche": Exit Function
+    End If
+    KC_TargetWeekMatches = True
+    reason = ws.Name & " / " & DateText(mon)
+    Exit Function
+Failed:
+    reason = "Zielwoche nicht sicher bestimmbar: " & Err.Description
+End Function

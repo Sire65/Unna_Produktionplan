@@ -135,7 +135,9 @@ End Function
 Public Function KC_Enqueue(ByVal subject As String, ByVal body As String, ByVal entryId As String, ByVal storeId As String, ByVal messageId As String, ByVal sender As String, ByVal received As Date, ByVal sent As Date) As Long
     Dim q As Worksheet, b As Worksheet, r As Long, j As Long, br As Long, id As Long, p As Long
     Dim evaluation As Object, existing As Boolean
+    Dim targetReason As String
     If ThisWorkbook.ReadOnly Then Err.Raise vbObjectError + 610, , "Arbeitsmappe schreibgeschützt"
+    If Not KC_V20.KC_TargetWeekMatches(ThisWorkbook, subject, targetReason) Then Exit Function
     Set q = KC_Sheet("_KC_Q"): Set b = KC_Sheet("_KC_Body")
     For j = 2 To q.Cells(q.Rows.Count, 1).End(xlUp).row
         existing = False

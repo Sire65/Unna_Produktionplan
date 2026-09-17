@@ -36,3 +36,7 @@ V20: Strolche R/S/T; Kita2_4 AC. Zusätzlich vom Auftraggeber freigegeben: Clust
 `tools/build.ps1 -SourcePath <unveränderte MASTER.xlsm> -OutputPath <neue Kopie.xlsm>` baut ausschließlich eine Kopie mittels installierten Windows-Excels. Zugriff auf das VBA-Projekt muss für den **Entwicklungsbau** bereits möglich sein; das Werkzeug ändert keine globalen Sicherheits-/Trust-Center-Einstellungen. Der Küchenbetrieb benötigt diesen Zugriff und dieses Werkzeug nicht.
 
 Regressionstests, Outlook-Referenzen, Abnahmeberichte und die XLSM mit Produktionsdaten bleiben lokal. Dieses Repository enthält die VBA-Quellen, das Bauwerkzeug und technische Dokumentation. Die fachliche Kontrolle gegen die MASTER bleibt vor einer Ablösung im Küchenbetrieb erforderlich.
+
+### Zielwochenfilter
+
+Jede geöffnete Mappe liest nur Mails, deren Lieferdatum zum Original-KW-Blatt und dessen Montag in A8 passt. KW und Jahr müssen stimmen; Wochenbestellungen müssen Montag bis Freitag derselben Woche umfassen. Empfangsdatum und aktive Mappe bestimmen das Ziel nicht. Fremde Wochen werden vor Speicherung von Mailtext, IDs und Queue übersprungen. Eine andere geöffnete, aktualisierte Wochenmappe liest ihre eigenen Mails unabhängig aus Outlook. Geschlossene Zielmappen werden nicht geöffnet; die Mails bleiben in Outlook und werden innerhalb des eingestellten Suchzeitraums später eingelesen. Erneute Prüfung vor Verbuchung verhindert das Schreiben in eine inzwischen geänderte Zielwoche. Auto bleibt standardmäßig AUS.
