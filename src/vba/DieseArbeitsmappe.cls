@@ -313,9 +313,7 @@ Private Sub Workbook_Open()
 
 
 '                            Worksheets(SHEET_STAMM).Range("X7").AddComment _
-
 '                                "Manuelle RGB-Eingabe" & vbCrLf & _
-
 '                                "Format: R,G,B (0–255)"
 
 '
@@ -360,9 +358,7 @@ Application.EnableEvents = True
 
 FehlerHandler:
 
-    MsgBox "Beim Öffnen der Mappe ist ein Fehler aufgetreten: " & Err.Description, _
-
-           vbExclamation, "Hinweis"
+    MsgBox "Beim Öffnen der Mappe ist ein Fehler aufgetreten: " & Err.Description, vbExclamation, "Hinweis"
 
 End Sub
 
