@@ -1,0 +1,5 @@
+tests/
+docs/ABNAHME.md
+*.xlsm
+*.msg
+*.zip

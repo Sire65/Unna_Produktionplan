@@ -1,0 +1,849 @@
+[
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "AddCol",
+    "line": 115,
+    "parameters": "string n,int w){grid.Columns.Add(new DataGridViewTextBoxColumn{HeaderText=n,Name=n,Width=w,SortMode=DataGridViewColumnSortMode.NotSortable});}",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "Busy",
+    "line": 117,
+    "parameters": "bool on,string msg)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "OnDragEnter",
+    "line": 125,
+    "parameters": "object s,DragEventArgs e)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "DraggedMailCount",
+    "line": 130,
+    "parameters": "IDataObject data)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "AddCapture",
+    "line": 148,
+    "parameters": "string cap)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "OnDragDrop",
+    "line": 158,
+    "parameters": "object s,DragEventArgs e)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "OnAction",
+    "line": 194,
+    "parameters": "){if(!previewReady)DoPreview();else DoCommit();}",
+    "effect": "COM/Arbeitsmappe"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "DoPreview",
+    "line": 195,
+    "parameters": ")",
+    "effect": "COM/Arbeitsmappe"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "DoCommit",
+    "line": 230,
+    "parameters": ")",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "OnGridCellContentClick",
+    "line": 245,
+    "parameters": "object s,DataGridViewCellEventArgs e)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "DeleteSelectedRows",
+    "line": 253,
+    "parameters": ")",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "DeleteRows",
+    "line": 262,
+    "parameters": "List<int> indexes)",
+    "effect": "COM/Arbeitsmappe"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "OnGridDoubleClick",
+    "line": 275,
+    "parameters": "object s,DataGridViewCellEventArgs e)",
+    "effect": "COM/Arbeitsmappe"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "C",
+    "line": 294,
+    "parameters": "DataGridViewRow r,int i){return r.Cells[i].Value==null?\"\":Convert.ToString(r.Cells[i].Value);}",
+    "effect": "COM/Arbeitsmappe"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "AppendLive",
+    "line": 296,
+    "parameters": "string kind,string msg)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "ReadProtocol",
+    "line": 308,
+    "parameters": "ref int seen)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "RunWaitWithProtocol",
+    "line": 321,
+    "parameters": "string exe,string args)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "RunWait",
+    "line": 336,
+    "parameters": "string exe,string args){var psi=new ProcessStartInfo(exe,args){UseShellExecute=false,CreateNoWindow=true};using(var p=Process.Start(psi)){while(!p.HasExited){Application.DoEvents();System.Threading.Thread.Sleep(80);}return p.ExitCode;}}",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "ConvertSonderkost",
+    "line": 340,
+    "parameters": "string raw){",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "CustomerTarget",
+    "line": 359,
+    "parameters": "string facility, string detail){",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "CellColumnFromMainTarget",
+    "line": 390,
+    "parameters": "string chain){",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "BaseRowFromMainTarget",
+    "line": 395,
+    "parameters": "string chain){",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "SonderkostRowOffset",
+    "line": 399,
+    "parameters": "string cat){",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "ConvertSonderkostMulti",
+    "line": 407,
+    "parameters": "string raw){",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "ManualCombinationCell",
+    "line": 424,
+    "parameters": "string customer,string raw){",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "SonderkostCountFromLine",
+    "line": 445,
+    "parameters": "string line){",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "SonderkostRawFormFromLine",
+    "line": 450,
+    "parameters": "string line){",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "ShowSonderkostWritePreview",
+    "line": 461,
+    "parameters": "){",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Drop.cs",
+    "function": "ImportFromFile",
+    "line": 587,
+    "parameters": "){",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "IIfSafe",
+    "line": 362,
+    "parameters": "cond,a,b)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "ReadUtf8",
+    "line": 366,
+    "parameters": "path)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "WriteUtf8",
+    "line": 374,
+    "parameters": "path,txt)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "ReadQueue",
+    "line": 380,
+    "parameters": "path)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "ReadCapture",
+    "line": 396,
+    "parameters": "path)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "B64ToUtf8",
+    "line": 411,
+    "parameters": "b)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "Rx1",
+    "line": 420,
+    "parameters": "t,p)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "AddN",
+    "line": 427,
+    "parameters": "a,b)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "FlatText",
+    "line": 431,
+    "parameters": "s)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "GermanDate",
+    "line": 441,
+    "parameters": "t)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "SecondGermanDate",
+    "line": 452,
+    "parameters": "t)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "MonthNo",
+    "line": 465,
+    "parameters": "mo)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "DateText",
+    "line": 482,
+    "parameters": "d)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "DetectOrderType",
+    "line": 490,
+    "parameters": "subj)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "DetectOrderRange",
+    "line": 502,
+    "parameters": "subj)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "NumberFromCell",
+    "line": 514,
+    "parameters": "v)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "IsWeekCopySheet",
+    "line": 521,
+    "parameters": "sheetName)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "IsRealWeekSheetName",
+    "line": 538,
+    "parameters": "s)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "WeekStartFromSheet",
+    "line": 545,
+    "parameters": "ws)",
+    "effect": "COM/Arbeitsmappe"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "FindWeekSheetByDate",
+    "line": 558,
+    "parameters": "wb,d,ByRef info)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "HeaderCol",
+    "line": 615,
+    "parameters": "ws,want)",
+    "effect": "COM/Arbeitsmappe"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "DayBaseRow",
+    "line": 625,
+    "parameters": "ws,d)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "ColLetter",
+    "line": 634,
+    "parameters": "colNo)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "LueText",
+    "line": 643,
+    "parameters": ")",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "InstitutionById",
+    "line": 647,
+    "parameters": "id)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "TargetLabel",
+    "line": 658,
+    "parameters": "id)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "QtyAfterLabel",
+    "line": 669,
+    "parameters": "body,labelPattern)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "ClusterDetails",
+    "line": 678,
+    "parameters": "body)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "LuenernDetails",
+    "line": 691,
+    "parameters": "body)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "KeyWasBooked",
+    "line": 700,
+    "parameters": "ws,k)",
+    "effect": "COM/Arbeitsmappe"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "GetWorkbookByPath",
+    "line": 712,
+    "parameters": "path)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "MarkAutoCell",
+    "line": 721,
+    "parameters": "cell)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "ColorOne",
+    "line": 730,
+    "parameters": "cell,st)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "WeekDaySegment",
+    "line": 738,
+    "parameters": "body,d)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "GermanMonthName",
+    "line": 763,
+    "parameters": "m)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "BlockQtySum",
+    "line": 769,
+    "parameters": "seg,startPattern,boundaryPattern)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "LuenernWeekQtySum",
+    "line": 802,
+    "parameters": "seg,n)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "GroupQtySum",
+    "line": 806,
+    "parameters": "seg,n)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_DropImport.vbs",
+    "function": "ClusterQtySum",
+    "line": 810,
+    "parameters": "seg,n)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_OutlookCapture.vbs",
+    "function": "One",
+    "line": 54,
+    "parameters": "s)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_OutlookCapture.vbs",
+    "function": "B64",
+    "line": 58,
+    "parameters": "s)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_OutlookCapture.vbs",
+    "function": "WriteUtf8",
+    "line": 78,
+    "parameters": "p, t)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_OutlookMultiCapture.vbs",
+    "function": "Utf8BytesNoBom",
+    "line": 33,
+    "parameters": "s)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_OutlookMultiCapture.vbs",
+    "function": "B64Utf8",
+    "line": 44,
+    "parameters": "s)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_OutlookMultiCapture.vbs",
+    "function": "WriteUtf8NoBom",
+    "line": 53,
+    "parameters": "path,s)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "WriteDiag",
+    "line": 194,
+    "parameters": "p,s,n)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "ReadUtf8",
+    "line": 198,
+    "parameters": "path)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "WriteUtf8",
+    "line": 206,
+    "parameters": "path,txt)",
+    "effect": "Dateisystem"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "ReadQueue",
+    "line": 212,
+    "parameters": "path)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "ReadCapture",
+    "line": 228,
+    "parameters": "path)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "B64ToUtf8",
+    "line": 243,
+    "parameters": "b)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "Rx1",
+    "line": 252,
+    "parameters": "t,p)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "AddN",
+    "line": 259,
+    "parameters": "a,b)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "FlatText",
+    "line": 263,
+    "parameters": "s)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "GermanDate",
+    "line": 273,
+    "parameters": "t)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "SecondGermanDate",
+    "line": 284,
+    "parameters": "t)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "MonthNo",
+    "line": 297,
+    "parameters": "mo)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "DateText",
+    "line": 314,
+    "parameters": "d)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "DetectOrderType",
+    "line": 322,
+    "parameters": "subj)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "DetectOrderRange",
+    "line": 334,
+    "parameters": "subj)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "NumberFromCell",
+    "line": 346,
+    "parameters": "v)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "IsWeekCopySheet",
+    "line": 353,
+    "parameters": "sheetName)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "IsRealWeekSheetName",
+    "line": 370,
+    "parameters": "s)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "WeekStartFromSheet",
+    "line": 377,
+    "parameters": "ws)",
+    "effect": "COM/Arbeitsmappe"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "FindWeekSheetByDate",
+    "line": 390,
+    "parameters": "wb,d,ByRef info)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "HeaderCol",
+    "line": 447,
+    "parameters": "ws,want)",
+    "effect": "COM/Arbeitsmappe"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "DayBaseRow",
+    "line": 457,
+    "parameters": "ws,d)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "ColLetter",
+    "line": 466,
+    "parameters": "colNo)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "LueText",
+    "line": 475,
+    "parameters": ")",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "InstitutionById",
+    "line": 479,
+    "parameters": "id)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "TargetLabel",
+    "line": 490,
+    "parameters": "id)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "WeekDaySegment",
+    "line": 501,
+    "parameters": "body,d)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "GermanMonthName",
+    "line": 526,
+    "parameters": "m)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "ClusterQtySum",
+    "line": 531,
+    "parameters": "seg,n)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "GroupQtySum",
+    "line": 574,
+    "parameters": "seg,n)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "LuenernWeekQtySum",
+    "line": 578,
+    "parameters": "seg,n)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "BlockQtySum",
+    "line": 582,
+    "parameters": "seg,startPattern,boundaryPattern)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "SummaryQtySum",
+    "line": 614,
+    "parameters": "seg)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "QtyAfterLabel",
+    "line": 630,
+    "parameters": "body,labelPattern)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "ClusterDetails",
+    "line": 639,
+    "parameters": "body)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "LuenernDetails",
+    "line": 652,
+    "parameters": "body)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "SonderkostPreview",
+    "line": 661,
+    "parameters": "body)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "IsStrictSonderkostLine",
+    "line": 714,
+    "parameters": "s)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "SonderkostPretty",
+    "line": 736,
+    "parameters": "sk)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "SonderkostFormCount",
+    "line": 749,
+    "parameters": "sk)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "SonderkostMealCount",
+    "line": 757,
+    "parameters": "sk)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "IsSonderkostLine",
+    "line": 773,
+    "parameters": "s)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "RxTest",
+    "line": 788,
+    "parameters": "s,pat)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "KeyWasBooked",
+    "line": 795,
+    "parameters": "ws,k)",
+    "effect": "COM/Arbeitsmappe"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "GetWorkbookByPath",
+    "line": 807,
+    "parameters": "path)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "MarkAutoCell",
+    "line": 816,
+    "parameters": "cell)",
+    "effect": "Textauswertung / UI"
+  },
+  {
+    "file": "KC_KitaFino_Preview.vbs",
+    "function": "ColorOne",
+    "line": 825,
+    "parameters": "cell,st)",
+    "effect": "Textauswertung / UI"
+  }
+]
